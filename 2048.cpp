@@ -159,18 +159,19 @@ void moveUp()
 					map[temp][i] *= 2;
 					map[j][i] = 0;
 					temp = j;
-				}
-				else if (map[temp][i] == 0)
-				{
-					temp++;
+					or_create = true;
 				}
 				else if (map[temp][i] != map[j][i])
 				{
 					temp = j;
 				}
+				else if (map[temp][i] == 0)
+				{
+					temp++;
+				}
 			}
 		}
-		//第二次循环，找0位，消除空位
+		//第二、三次循环，找0位，消除空位
 		for (int j = 0; j < MAX_SIZE; j++)
 		{
 			if (map[j][i] == 0)
@@ -233,7 +234,6 @@ void moveDown()
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
 		int temp = MAX_SIZE-1;
-		//第一次循环，合并相同数
 		for (int j = MAX_SIZE-2; j >=0; j--)
 		{
 			if (map[j][i] != 0)
@@ -243,18 +243,19 @@ void moveDown()
 					map[temp][i] *= 2;
 					map[j][i] = 0;
 					temp = j;
-				}
-				else if (map[temp][i] == 0)
-				{
-					temp--;
+					or_create = true;
 				}
 				else if (map[temp][i] != map[j][i])
 				{
 					temp = j;
 				}
+				else if (map[temp][i] == 0)
+				{
+					temp--;
+				}
+				
 			}
 		}
-		//第二次循环，找0位，消除空位
 		for (int j = MAX_SIZE-1; j >=0; j--)
 		{
 			if (map[j][i] == 0)
@@ -282,12 +283,109 @@ void moveDown()
 
 void moveLeft()
 {
-
+	bool or_create = false;
+	for (int i = 0; i < MAX_SIZE; i++)
+	{
+		int temp = 0;
+		//第一次循环，合并相同数
+		for (int j = 1; j < MAX_SIZE; j++)
+		{
+			if (map[i][j] != 0)
+			{
+				if (map[i][temp] == map[i][j])
+				{
+					map[i][temp] *= 2;
+					map[i][j] = 0;
+					temp = j;
+					or_create = true;
+				}
+				else if (map[i][temp] != map[i][j])
+				{
+					temp = j;
+				}
+				else if (map[i][temp] == 0)
+				{
+					temp++;
+				}
+			}
+		}
+		//第二、三次循环，找0位，消除空位
+		for (int j = 0; j < MAX_SIZE; j++)
+		{
+			if (map[i][j] == 0)
+			{
+				temp = j;
+				break;
+			}
+		}
+		for (int j = temp + 1; j < MAX_SIZE; j++)
+		{
+			if (map[i][j] != 0)
+			{
+				map[i][temp] = map[i][j];
+				map[i][j] = 0;
+				temp++;
+				or_create = true;
+			}
+		}
+	}
+	if (or_create)
+	{
+		createNew_num();
+	}
 }
 
 void moveRight()
 {
-
+	bool or_create = false;
+	for (int i = 0; i < MAX_SIZE; i++)
+	{
+		int temp = MAX_SIZE - 1;
+		for (int j = MAX_SIZE - 2; j >= 0; j--)
+		{
+			if (map[i][j] != 0)
+			{
+				if (map[i][temp] == map[i][j])
+				{
+					map[i][temp] *= 2;
+					map[i][j] = 0;
+					temp = j;
+					or_create = true;
+				}
+				else if (map[i][temp] != map[i][j])
+				{
+					temp = j;
+				}
+				else if (map[i][temp] == 0)
+				{
+					temp--;
+				}
+				
+			}
+		}
+		for (int j = MAX_SIZE - 1; j >= 0; j--)
+		{
+			if (map[i][j] == 0)
+			{
+				temp = j;
+				break;
+			}
+		}
+		for (int j = temp - 1; j >= 0; j--)
+		{
+			if (map[i][j] != 0)
+			{
+				map[i][temp] = map[i][j];
+				map[i][j] = 0;
+				temp--;
+				or_create = true;
+			}
+		}
+	}
+	if (or_create)
+	{
+		createNew_num();
+	}
 }
 
 //按键处理
