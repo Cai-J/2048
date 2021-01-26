@@ -48,6 +48,20 @@ int createNum()
 		return 2;
 }
 
+void createNew_num()
+{
+	while (true)
+	{
+		int r = rand() % MAX_SIZE;
+		int c = rand() % MAX_SIZE;
+		if (map[r][c] == 0)
+		{
+			map[r][c] = createNum();
+			break;
+		}
+	}
+}
+
 //初始化数据
 void gameInit()
 {
@@ -67,7 +81,6 @@ void gameInit()
 //绘制界面
 void gameDraw()
 {
-	
 //	rectangle(20, 20, 80, 80);				//空心矩形
 //	solidrectangle(120, 120, 180, 180);		//实心矩形
 
@@ -91,10 +104,9 @@ void gameDraw()
 			else
 			{
 				int index = (int)log2((double)map[i][k]);
-				cout << index << "\t";
-				//COLORREF text_color = arr[index];
-				//setfillcolor(text_color);
-				setfillcolor(arr[index]);
+				COLORREF text_color = arr[index];
+				setfillcolor(text_color);
+				//setfillcolor(arr[index]);
 			}
 			//setfillcolor(RGB(205, 193, 180));
 			//绘制格子
@@ -123,50 +135,149 @@ void gameDraw()
 				int temp_y = (GRID_W - temp_h) / 2;
 				outtextxy(x+temp_x, y+temp_y, str);
 			}
-
-			
+			cout << map[i][k] << "\t";
 		}
+		cout << endl;
 	}
+	cout << endl;
 }
 
 //游戏操作,动态数组
 void moveUp()
 {
+	bool or_create = false;
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
 		int temp = 0;
-		for (int begin =  0; begin < MAX_SIZE; begin++)
+		//第一次循环，合并相同数
+		for (int j = 1; j < MAX_SIZE; j++)
 		{
-			if (map[begin][i] != 0)
+			if (map[j][i] != 0)
 			{
-				if (map[temp][i] == 0)
+				if (map[temp][i] == map[j][i])
 				{
-					map[temp][i] = map[begin][i];
-					map[begin][i] = 0;
+					map[temp][i] *= 2;
+					map[j][i] = 0;
+					temp = j;
 				}
-				else if (map[temp][i] == map[begin][i])
+				else if (map[temp][i] == 0)
 				{
-					map[temp][i] *=2;
-					map[begin][i] = 0;
 					temp++;
 				}
-				else
+				else if (map[temp][i] != map[j][i])
 				{
-					map[temp + 1][i] = map[begin][i];
-					if (temp + 1 != begin)
-					{
-						map[begin][i] = 0;
-					}
-					temp++;
+					temp = j;
 				}
 			}
 		}
+		//第二次循环，找0位，消除空位
+		for (int j = 0; j < MAX_SIZE; j++)
+		{
+			if (map[j][i] == 0)
+			{
+				temp = j;
+				break;
+			}
+		}
+		for (int j = temp+1; j < MAX_SIZE; j++)
+		{
+			if (map[j][i] != 0)
+			{
+				map[temp][i] = map[j][i];
+				map[j][i] = 0;
+				temp++;
+				or_create = true;
+			}
+		}
 	}
+	if (or_create)
+	{
+		createNew_num();
+	}
+	//for (int i = 0; i < max_size; i++)
+	//{
+	//	int temp = 0;
+	//	for (int begin = 1; begin < max_size; begin++)
+	//	{
+	//		if (map[begin][i] != 0)
+	//		{
+	//			if (map[temp][i] == 0)
+	//			{
+	//				map[temp][i] = map[begin][i];
+	//				map[begin][i] = 0;
+	//			}
+	//			else if (map[temp][i] == map[begin][i])
+	//			{
+	//				map[temp][i] *=2;
+	//				map[begin][i] = 0;
+	//				temp++;
+	//			}
+	//			else
+	//			{
+	//				map[temp + 1][i] = map[begin][i];
+	//				if (temp + 1 != begin)
+	//				{
+	//					map[begin][i] = 0;
+	//				}
+	//				temp++;
+	//			}
+	//		}
+	//	}
+	//}
+	//createnew_num();
 }
 
 void moveDown()
 {
-
+	bool or_create = false;
+	for (int i = 0; i < MAX_SIZE; i++)
+	{
+		int temp = MAX_SIZE-1;
+		//第一次循环，合并相同数
+		for (int j = MAX_SIZE-2; j >=0; j--)
+		{
+			if (map[j][i] != 0)
+			{
+				if (map[temp][i] == map[j][i])
+				{
+					map[temp][i] *= 2;
+					map[j][i] = 0;
+					temp = j;
+				}
+				else if (map[temp][i] == 0)
+				{
+					temp--;
+				}
+				else if (map[temp][i] != map[j][i])
+				{
+					temp = j;
+				}
+			}
+		}
+		//第二次循环，找0位，消除空位
+		for (int j = MAX_SIZE-1; j >=0; j--)
+		{
+			if (map[j][i] == 0)
+			{
+				temp = j;
+				break;
+			}
+		}
+		for (int j = temp-1; j >=0; j--)
+		{
+			if (map[j][i] != 0)
+			{
+				map[temp][i] = map[j][i];
+				map[j][i] = 0;
+				temp--;
+				or_create = true;
+			}
+		}
+	}
+	if (or_create)
+	{
+		createNew_num();
+	}
 }
 
 void moveLeft()
@@ -189,19 +300,26 @@ void keyDeal()
 	case 'w':
 	case 'W':
 	case 72:
+	case 38:	//向上键盘值
 		moveUp();
 		break;
 	case 's':
 	case 'S':
 	case 80:
+	case 40:	//向下键盘值
+		moveDown();
 		break;
 	case 'a':
 	case 'A':
 	case 75:
+	case 37:	//向左键盘值
+		moveLeft();
 		break;
 	case 'd':
 	case 'D':
 	case 77:
+	case 39:	//向右键盘值
+		moveRight();
 		break;
 	default:
 		break;
@@ -218,7 +336,6 @@ int main()
 		gameDraw();
 		keyDeal();
 	}
-
 	closegraph();	//关闭图形窗口
 	return 0;
 }
