@@ -1,2 +1,0 @@
-C:\Users\yaozi\Desktop\c_project\play2048\x64\Debug\play2048.exe
-C:\Users\yaozi\Desktop\c_project\play2048\x64\Debug\play2048.pdb
