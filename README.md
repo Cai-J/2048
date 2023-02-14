@@ -6,11 +6,15 @@
 
   - 初始化界面
 
-  <img src="https://github.com/Cai-J/2048/blob/main/md_img/begin.png?raw=true"  />
-  
+
+
+![img1](./md_img/begin.png)
+
   - 2048完成界面
 
-  <img src="https://github.com/Cai-J/2048/blob/main/md_img/2048ed.png?raw=true"  />
+
+
+![img2](./md_img/2048ed.png)
 
 ## 程序使用
 
